@@ -1,0 +1,47 @@
+/* Copyright (C) 2021 The Android Open Source Project
+**
+** This software is licensed under the terms of the GNU General Public
+** License version 2, as published by the Free Software Foundation, and
+** may be copied, distributed, and modified under those terms.
+**
+** This program is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+*/
+
+#ifndef _RESIZABLE_DISPLAY_CONFIG_H
+#define _RESIZABLE_DISPLAY_CONFIG_H
+
+#include "android/utils/compiler.h"
+
+ANDROID_BEGIN_HEADER
+
+enum PresetEmulatorSizeType {
+    PRESET_SIZE_PHONE = 0,
+    PRESET_SIZE_UNFOLDED = 1,
+    PRESET_SIZE_TABLET = 2,
+    PRESET_SIZE_MAX = 3,  // max value for resizable type, ignore desktop
+};
+
+struct PresetEmulatorSizeInfo {
+    enum PresetEmulatorSizeType type;
+    int width;
+    int height;
+    int dpi;
+};
+
+bool isResizableTransitionInProgress();
+void setResizableTransitionInProgress(bool inProgress);
+bool resizableEnabled();
+bool resizableEnabled34();
+void resizableInit();
+bool getResizableConfig(enum PresetEmulatorSizeType id,
+                        struct PresetEmulatorSizeInfo* info);
+enum PresetEmulatorSizeType getResizableActiveConfigId();
+void setResizableActiveConfigId(enum PresetEmulatorSizeType id);
+void updateAndroidDisplayConfigPath(enum PresetEmulatorSizeType id);
+const char* getResizableOverlayName();
+
+ANDROID_END_HEADER
+#endif

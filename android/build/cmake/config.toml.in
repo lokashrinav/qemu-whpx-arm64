@@ -1,0 +1,179 @@
+# This is a cargo configuration that will make sure
+# all the crates are internal only.
+
+[net]
+offline = true
+
+[patch.crates-io]
+aho-corasick = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/aho-corasick" }
+anstyle = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/anstyle" }
+anyhow = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/anyhow" }
+argh = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/argh" }
+argh_derive = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/argh_derive" }
+argh_shared = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/argh_shared" }
+arrayvec = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/arrayvec" }
+atty = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/atty" }
+base64 = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/base64" }
+bindgen = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/bindgen" }
+bitflags = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/bitflags", package = "bitflags" }
+byteorder = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/byteorder" }
+bytes = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/bytes" }
+cexpr = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/cexpr" }
+cfg-if = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/cfg-if" }
+chrono = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/chrono" }
+clang-sys = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/clang-sys" }
+codespan-reporting = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/codespan-reporting" }
+crc32fast = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/crc32fast" }
+crossbeam-channel = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/crossbeam-channel" }
+crossbeam-deque = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/crossbeam-deque" }
+crossbeam-epoch = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/crossbeam-epoch" }
+crossbeam-utils = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/crossbeam-utils" }
+data-encoding = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/data-encoding" }
+either = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/either" }
+env_logger = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/env_logger" }
+errno = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/errno" }
+etherparse = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/etherparse" }
+fastrand = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/fastrand" }
+fnv = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/fnv" }
+futures = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures" }
+futures-channel = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures-channel" }
+futures-core = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures-core" }
+futures-executor = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures-executor" }
+futures-io = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures-io" }
+futures-macro = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures-macro" }
+futures-sink = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures-sink" }
+futures-task = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures-task" }
+futures-util = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/futures-util" }
+getrandom = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/getrandom" }
+glam = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/glam" }
+glob = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/glob" }
+grpcio = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/grpcio" }
+hashbrown = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/hashbrown" }
+heck = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/heck" }
+hex = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/hex" }
+http = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/http" }
+httparse = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/httparse" }
+indexmap = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/indexmap" }
+instant = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/instant" }
+itoa = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/itoa" }
+lazycell = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/lazycell" }
+lazy_static = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/lazy_static" }
+libc = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/libc" }
+libloading = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/libloading" }
+libm = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/libm" }
+libz-sys = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/libz-sys" }
+lock_api = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/lock_api" }
+log = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/log" }
+memchr = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/memchr" }
+memoffset = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/memoffset" }
+minimal-lexical = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/minimal-lexical" }
+mio = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/mio" }
+nom = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/nom" }
+num_cpus = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/num_cpus" }
+num-derive = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/num-derive" }
+num-integer = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/num-integer" }
+num-traits = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/num-traits" }
+once_cell = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/once_cell" }
+os_str_bytes = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/os_str_bytes" }
+parking_lot = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/parking_lot" }
+parking_lot_core = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/parking_lot_core" }
+paste = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/paste" }
+pdl-compiler = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/pdl-compiler" }
+pdl-runtime = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/pdl-runtime" }
+pest = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/pest" }
+pest_derive = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/pest_derive" }
+pest_generator = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/pest_generator" }
+pest_meta = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/pest_meta" }
+pin-project-lite = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/pin-project-lite" }
+pin-utils = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/pin-utils" }
+ppv-lite86 = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/ppv-lite86" }
+prettyplease = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/prettyplease" }
+proc-macro2 = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/proc-macro2" }
+protobuf = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/protobuf" }
+protobuf-codegen = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/protobuf-codegen" }
+protobuf-json-mapping = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/protobuf-json-mapping" }
+protobuf-parse = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/protobuf-parse" }
+protobuf-support = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/protobuf-support" }
+quote = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/quote" }
+rand = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/rand" }
+rand_chacha = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/rand_chacha" }
+rand_core = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/rand_core" }
+rayon = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/rayon" }
+rayon-core = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/rayon-core" }
+regex = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/regex" }
+regex-syntax = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/regex-syntax" }
+rustc-hash = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/rustc-hash" }
+rustix = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/rustix" }
+ryu = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/ryu" }
+same-file = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/same-file" }
+scopeguard = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/scopeguard" }
+serde = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/serde" }
+serde_derive = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/serde_derive" }
+serde_json = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/serde_json" }
+sharded-slab = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/sharded-slab" }
+shlex = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/shlex" }
+slab = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/slab" }
+smallvec = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/smallvec" }
+socket2 = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/socket2" }
+syn = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/syn" }
+tempfile = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tempfile" }
+termcolor = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/termcolor" }
+textwrap = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/textwrap" }
+thiserror = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/thiserror" }
+thiserror-impl = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/thiserror-impl" }
+thread_local = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/thread_local" }
+tokio-stream = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tokio-stream" }
+tracing = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tracing" }
+tracing-attributes = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tracing-attributes" }
+tracing-core = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tracing-core" }
+tracing-subscriber = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tracing-subscriber" }
+tokio = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tokio" }
+tokio-macros = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tokio-macros" }
+tokio-util = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tokio-util" }
+tungstenite = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/tungstenite" }
+ucd-trie = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/ucd-trie" }
+unicode-ident = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/unicode-ident" }
+unicode-width = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/unicode-width" }
+utf-8 = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/utf-8" }
+walkdir = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/walkdir" }
+which = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/which" }
+zerocopy = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/zerocopy" }
+zerocopy-derive = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/zerocopy-derive" }
+zip = { path = "${AOSP_ROOT}/external/rust/android-crates-io/crates/zip" }
+
+# TODO: Update Rust toolchain to use the latest clap crates.
+clap_derive = { path = "${AOSP_ROOT}/external/rust/android-crates-io-clap/crates/clap_derive" }
+clap_lex = { path = "${AOSP_ROOT}/external/rust/android-crates-io-clap/crates/clap_lex" }
+
+# TODO (365637024): Migrate following crates to monorepo external/rust/android-crates-io
+bitflags1 = { path = "${AOSP_ROOT}/external/rust/crates/bitflags/1.3.2", package = "bitflags" }
+clap = { path = "${AOSP_ROOT}/external/rust/crates/clap" }
+cxx = { path = "${AOSP_ROOT}/external/rust/crates/cxx" }
+cxx-build = { path = "${AOSP_ROOT}/external/rust/crates/cxx/gen/build" }
+grpcio-sys = { path = "${AOSP_ROOT}/external/rust/crates/grpcio-sys" }
+itertools = { path = "${AOSP_ROOT}/external/rust/crates/itertools" }
+num-bigint = { path = "${AOSP_ROOT}/external/rust/crates/num-bigint" }
+pica = { path = "${AOSP_ROOT}/external/rust/crates/pica" }
+proc-macro-error = { path = "${AOSP_ROOT}/external/rust/crates/proc-macro-error" }
+proc-macro-error-attr = { path = "${AOSP_ROOT}/external/rust/crates/proc-macro-error-attr" }
+
+# Patch crates-io with dummy crates for dev dependencies
+# that are actually not required for building crates and not
+# added to the vendored crates.
+backtrace = { path = "${AOSP_ROOT}/external/qemu/android/build/cmake/rust/crates/backtrace" }
+googletest = { path = "${AOSP_ROOT}/external/qemu/android/build/cmake/rust/crates/googletest" }
+hermit-abi = { path = "${AOSP_ROOT}/external/qemu/android/build/cmake/rust/crates/hermit-abi" }
+redox_syscall = { version = "0.2.9", path = "${AOSP_ROOT}/external/qemu/android/build/cmake/rust/crates/redox_syscall" }
+redox_syscall2 = { version = "0.4.1", path = "${AOSP_ROOT}/external/qemu/android/build/cmake/rust/crates/redox_syscall2", package="redox_syscall" }
+remove_dir_all = { path = "${AOSP_ROOT}/external/qemu/android/build/cmake/rust/crates/remove_dir_all" }
+sha2 = { path = "${AOSP_ROOT}/external/qemu/android/build/cmake/rust/crates/sha2" }
+windows-sys = { path = "${AOSP_ROOT}/external/qemu/android/third_party/rust/crates/windows-sys-0.59.0" }
+
+# You will have to process this with the cmake configure_file command
+# and bin place it in the RUST_root
+[source.systembt]
+directory = "${VENDOR_CRATES}"
+
+[source.crates-io]
+replace-with = "systembt"
+local-registry = "/nonexistent"

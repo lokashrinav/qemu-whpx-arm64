@@ -1,0 +1,23 @@
+[build-system]
+# AVOID CHANGING REQUIRES: IT WILL BE UPDATED BY PYSCAFFOLD!
+requires = ["setuptools>=46.1.0", "wheel", "grpcio-tools"]
+build-backend = "setuptools.build_meta"
+
+# [tool.setuptools_scm]
+# # For smarter version schemes and other configuration options,
+# # check out https://github.com/pypa/setuptools_scm
+# version_scheme = "no-guess-dev"
+[project]
+name = "emu-bluetooth-sample"
+authors = [{ name = "Erwin Jansen", email = "jansene@google.com" }]
+license = { file = "LICENSE.TXT" }
+readme = "README.md"
+version = "1.0"
+classifiers = ["Topic :: Software Development"]
+description = "A commandline tool to manipulate emulator snapshots."
+
+
+dependencies = [
+    "aemu-grpc>=0.0.1",
+    "importlib-metadata; python_version<'3.8'",
+]

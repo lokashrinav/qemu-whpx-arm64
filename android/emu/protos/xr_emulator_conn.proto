@@ -1,0 +1,134 @@
+/*
+ * Copyright (C) 2024 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto2";
+option optimize_for = LITE_RUNTIME;
+
+package xr_emulator_proto;
+
+enum MsgType {
+    MSG_TYPE_UNKNOWN = 0;
+    MSG_TYPE_SET_ENVIRONMENT_MODE = 1;
+    MSG_TYPE_SET_INPUT_MODE = 2;
+    MSG_TYPE_RECENTER_SCREEN = 3;
+    MSG_TYPE_SET_VIEWPORT_CONTROL = 4;
+    MSG_TYPE_SET_HEAD_ROTATION = 5;
+    MSG_TYPE_SET_HEAD_MOVEMENT = 6;
+    MSG_TYPE_SET_HEAD_ANGULAR_VELOCITY = 7;
+    MSG_TYPE_SET_HEAD_VELOCITY = 8;
+    MSG_TYPE_SET_OPTIONS = 9;
+}
+enum Status {
+    RESULT_UNKNOWN = 0;
+    RESULT_OK = 1;
+    ERROR_UNIMPLEMENTED_CMD = 2;
+    ERROR_INVALID_PROPERTY = 3;
+}
+
+enum EnvironmentMode {
+    option deprecated = true;
+    ENVIRONMENT_MODE_UNKNOWN = 0;
+    ENVIRONMENT_MODE_PASSTHROUGH_ON = 1;
+    ENVIRONMENT_MODE_PASSTHROUGH_OFF = 2;
+    ENVIRONMENT_MODE_LIVING_ROOM_DAY = 3;
+    ENVIRONMENT_MODE_LIVING_ROOM_NIGHT = 4;
+}
+
+enum InputMode {
+    option deprecated = true;
+    INPUT_MODE_MOUSE_UNKNOWN = 0;
+    INPUT_MODE_MOUSE_KEYBOARD = 1;
+    INPUT_MODE_HAND_RAYCAST = 2;
+    INPUT_MODE_EYE_TRACKING = 3;
+}
+
+enum ViewportControlMode {
+    VIEWPORT_CONTROL_MODE_UNKNOWN = 0;
+    VIEWPORT_CONTROL_MODE_PAN = 1;
+    VIEWPORT_CONTROL_MODE_ZOOM = 2;
+    VIEWPORT_CONTROL_MODE_ROTATE = 3;
+}
+
+// TODO(b/396418192): extract shared proto with emulator-controller.proto
+message XrOptions {
+    enum Environment {
+        LIVING_ROOM_DAY = 0;
+        LIVING_ROOM_NIGHT = 1;
+        // More environments may be added later.
+    }
+
+    // The currently active artificial surrounding environment (a.k.a.
+    // passthrough environment).
+    optional Environment environment = 1;
+
+    // A value of 0.0 means that the real or artificial surrounding environment
+    // (a.k.a. passthrough environment) is not visible. A value of 1.0 means
+    // that the passthrough environment is fully visible. Any value outside of
+    // the range [0.0-1.0] is ignored and leaves the state of passthrough
+    // unchanged. For simplicity of the implementation, this number may be
+    // rounded to an integer before applying.
+    optional float passthrough_coefficient = 2;
+}
+
+message RotationRadian {
+    // Components of the rotation vector in radians.
+    // Rotation angles are relative to the current orientation.
+    optional float x = 1;  // Angle of rotation around the x axis in right-handed direction.
+    optional float y = 2;  // Angle of rotation around the y axis in right-handed direction.
+    optional float z = 3;  // Angle of rotation around the z axis in right-handed direction.
+}
+
+message Translation {
+    // Components of the translation vector in meters.
+    optional float delta_x = 1;
+    optional float delta_y = 2;
+    optional float delta_z = 3;
+}
+
+message AngularVelocity {
+    // Components of the angular velocity vector in radians per second.
+    optional float omega_x = 1;
+    optional float omega_y = 2;
+    optional float omega_z = 3;
+}
+
+message Velocity {
+    // Components of the velocity vector in meters per second.
+    optional float x = 1;
+    optional float y = 2;
+    optional float z = 3;
+}
+
+
+message EmulatorRequest {
+    optional MsgType msg_type = 1;
+    optional EnvironmentMode environment_mode = 2;
+    optional InputMode input_mode = 3;
+    optional ViewportControlMode viewport_control_mode = 4;
+
+    optional RotationRadian xr_head_rotation_event = 5;
+    optional Translation xr_head_movement_event = 6;
+    optional AngularVelocity xr_head_angular_velocity_event = 7;
+    optional Velocity xr_head_velocity_event = 8;
+    optional XrOptions xr_options = 9;
+}
+
+message EmulatorResponse {
+    oneof response {
+        Status status = 1;
+        XrOptions xr_options = 2;
+    }
+}

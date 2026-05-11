@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "external/adt-infra"
+		},
+		{
+			"path": "external/qemu"
+		},
+		{
+			"path": "device/generic/goldfish-opengl"
+		},
+		{
+			"path": "external/deqp"
+		},
+		{
+			"path": "hardware/google/aemu"
+		},
+		{
+			"path": "hardware/google/gfxstream"
+		},
+		{
+			"path": "external/mesa3d"
+		}
+	]
+}

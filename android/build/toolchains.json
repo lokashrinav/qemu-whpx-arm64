@@ -1,0 +1,6 @@
+{
+    "clang": "clang-r530567",
+    "clang_emu_prebuilts": "clang-r487747c",
+    "rust": "1.73.0",
+    "visual_studio_version": "[16, 18)"
+}

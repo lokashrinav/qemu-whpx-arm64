@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>XrEnvironmentModeDialog</class>
+ <widget class="QDialog" name="XrEnvironmentModeDialog">
+  <property name="geometry">
+   <rect>
+    <x>100</x>
+    <y>0</y>
+    <width>52</width>
+    <height>172</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QPushButton" name="btn_xr_environment_passthrough_on">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>34</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>34</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/light/xr_environment_passthrough_on</normaloff>:/light/xr_environment_passthrough_on</iconset>
+     </property>
+     <property name="themeIconName" stdset="0">
+      <string notr="true">xr_environment_passthrough_on</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Pass Through On</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+     <property name="ToolWindowButton" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_xr_environment_passthrough_off">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>34</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>34</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/light/xr_environment_passthrough_off</normaloff>:/light/xr_environment_passthrough_off</iconset>
+     </property>
+     <property name="themeIconName" stdset="0">
+      <string notr="true">xr_environment_passthrough_off</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Pass Through Off</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+     <property name="ToolWindowButton" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_xr_environment_living_room_day">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>34</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>34</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/light/xr_environment_living_room_day</normaloff>:/light/xr_environment_living_room_day</iconset>
+     </property>
+     <property name="themeIconName" stdset="0">
+      <string notr="true">xr_environment_living_room_day</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Living Room Day</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+     <property name="ToolWindowButton" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="btn_xr_environment_living_room_night">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>34</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>34</width>
+       <height>34</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="resources.qrc">
+       <normaloff>:/light/xr_environment_living_room_night</normaloff>:/light/xr_environment_living_room_night</iconset>
+     </property>
+     <property name="themeIconName" stdset="0">
+      <string notr="true">xr_environment_living_room_night</string>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Living Room Night</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+     <property name="ToolWindowButton" stdset="0">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
