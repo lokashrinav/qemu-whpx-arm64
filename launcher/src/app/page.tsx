@@ -6,10 +6,12 @@ import { DeviceToolbar } from "@/components/device-toolbar";
 import { AndroidHome } from "@/components/android-home";
 import { ExtendedControls } from "@/components/extended-controls";
 import { ControlPanel } from "@/components/control-panel";
+import { ConsoleView } from "@/components/console-view";
 
 export default function Home() {
   const [showExtended, setShowExtended] = useState(false);
-  const [showPanel, setShowPanel] = useState(false);
+  const [showPanel, setShowPanel] = useState(true);
+  const [showConsole, setShowConsole] = useState(true);
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#292a2d] select-none">
@@ -23,10 +25,20 @@ export default function Home() {
             <span className="text-[8px] font-bold text-white">Q</span>
           </button>
           <span className="text-[11px] text-white/70 font-medium">
-            Android Emulator — arm64_atd:5554
+            QEMU WHPX ARM64 — Android Emulator
           </span>
         </div>
         <div className="flex-1" />
+        <div className="flex items-center gap-2 mr-3">
+          <button
+            onClick={() => setShowConsole(!showConsole)}
+            className={`text-[10px] px-2 py-0.5 rounded transition-colors ${
+              showConsole ? "bg-white/15 text-white/80" : "text-white/40 hover:text-white/60"
+            }`}
+          >
+            Console
+          </button>
+        </div>
         <div className="flex items-center gap-1">
           <button className="w-[28px] h-[20px] flex items-center justify-center text-white/40 hover:text-white/70 hover:bg-white/10 rounded-sm transition-colors">
             <svg width="10" height="10" viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="currentColor" strokeWidth="1.5"/></svg>
@@ -49,7 +61,7 @@ export default function Home() {
           </aside>
         )}
 
-        {/* Center */}
+        {/* Center — phone + toolbar */}
         <div className="flex-1 flex items-center justify-center py-2">
           <div className="flex items-start gap-0">
             <PhoneFrame>
@@ -64,6 +76,13 @@ export default function Home() {
             </div>
           )}
         </div>
+
+        {/* Console output panel */}
+        {showConsole && (
+          <aside className="w-[480px] border-l border-white/[0.06] bg-[#1a1b1e] flex-shrink-0">
+            <ConsoleView />
+          </aside>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { sendAdbCommand } from "@/lib/emulator";
+import { exec } from "child_process";
+import { promisify } from "util";
+
+const execAsync = promisify(exec);
 
 const KEY_MAP: Record<string, string> = {
   power: "shell input keyevent KEYCODE_POWER",
@@ -18,6 +21,10 @@ export async function POST(req: Request) {
   const adbCmd = KEY_MAP[command];
   if (!adbCmd) return NextResponse.json({ error: `Unknown command: ${command}` }, { status: 400 });
 
-  const result = await sendAdbCommand(adbCmd);
-  return NextResponse.json({ ok: true, output: result.slice(0, 500) });
+  try {
+    const { stdout, stderr } = await execAsync(`adb ${adbCmd}`, { timeout: 5000 });
+    return NextResponse.json({ ok: true, output: (stdout || stderr || "ok").slice(0, 500) });
+  } catch (e: unknown) {
+    return NextResponse.json({ ok: false, output: (e as Error).message || "command failed" });
+  }
 }

@@ -162,7 +162,7 @@ function BatteryPanel() {
       <SectionTitle>Battery</SectionTitle>
       <FieldRow label="Charge level">
         <div className="flex items-center gap-3">
-          <Slider value={[charge]} onValueChange={(v) => setCharge(v[0])} min={0} max={100} step={1} className="flex-1" />
+          <Slider value={[charge]} onValueChange={(v) => setCharge(Array.isArray(v) ? v[0] : v)} min={0} max={100} step={1} className="flex-1" />
           <span className="text-xs text-white/70 font-mono w-8 text-right">{charge}%</span>
         </div>
       </FieldRow>

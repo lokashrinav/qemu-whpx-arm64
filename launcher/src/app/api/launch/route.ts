@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
-import { launchEmulator } from "@/lib/emulator";
+import { startBoot, stopEmulator } from "@/lib/emulator";
 
 export async function POST(req: Request) {
-  const { avd } = await req.json();
-  if (!avd) return NextResponse.json({ error: "No AVD specified" }, { status: 400 });
+  const { imageDir, action } = await req.json();
 
-  const result = launchEmulator(avd);
-  if ("error" in result) return NextResponse.json(result, { status: 500 });
-  return NextResponse.json(result);
+  if (action === "stop") {
+    const stopped = stopEmulator();
+    return NextResponse.json({ stopped });
+  }
+
+  if (!imageDir) {
+    return NextResponse.json({ error: "No image directory specified" }, { status: 400 });
+  }
+
+  const result = startBoot(imageDir);
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 500 });
+  }
+  return NextResponse.json({ ok: true, message: "Boot sequence started" });
 }

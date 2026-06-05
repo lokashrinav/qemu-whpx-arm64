@@ -1,122 +1,237 @@
-import { execFile, exec, ChildProcess } from "child_process";
-import { existsSync, readFileSync, readdirSync } from "fs";
+import { spawn, ChildProcess } from "child_process";
+import { existsSync, readdirSync, createReadStream, createWriteStream, statSync } from "fs";
 import { join } from "path";
-import { promisify } from "util";
+import { createGunzip } from "zlib";
+import { pipeline } from "stream/promises";
 
-const execAsync = promisify(exec);
-
-const SDK_EMULATOR_DIR = join(
-  process.env.ANDROID_SDK_ROOT ||
-    join(process.env.USERPROFILE || "C:\\Users\\lokas", "AppData", "Local", "Android", "Sdk"),
-  "emulator"
-);
-const CUSTOM_EMULATOR_DIR = "C:\\tmp\\emu-win-arm64-objs";
-const EMULATOR_DIR = existsSync(join(SDK_EMULATOR_DIR, "emulator.exe")) ? SDK_EMULATOR_DIR : CUSTOM_EMULATOR_DIR;
-const EMULATOR_BIN = join(EMULATOR_DIR, "emulator.exe");
-const AVD_HOME = join(
-  process.env.ANDROID_AVD_HOME ||
-    join(process.env.USERPROFILE || "C:\\Users\\lokas", ".android", "avd")
-);
-const ADB_PATHS = [
-  join(
-    process.env.ANDROID_SDK_ROOT ||
-      join(process.env.USERPROFILE || "C:\\Users\\lokas", "AppData", "Local", "Android", "Sdk"),
-    "platform-tools",
-    "adb.exe"
-  ),
-  "adb",
-];
+const QEMU_BIN = "C:\\emu-src\\external\\qemu\\objs\\qemu\\windows-x86_64\\qemu-system-aarch64.exe";
+const SYSTEM_IMAGES_ROOT = "C:\\emu-src\\prebuilts\\android-emulator-build\\system-images\\generic\\system-images";
 
 let runningProcess: ChildProcess | null = null;
+let consoleBuffer: string[] = [];
+let emulatorState: "idle" | "preparing" | "booting" | "running" | "stopped" = "idle";
+let prepareProgress = "";
+let pendingImageDir = "";
 
-function findAdb(): string | null {
-  for (const p of ADB_PATHS) {
-    try {
-      if (existsSync(p)) return p;
-    } catch {}
-  }
-  return "adb";
-}
-
-export interface AVD {
+export interface SystemImage {
   name: string;
-  target: string;
+  apiLevel: string;
   abi: string;
-  ram: string;
-  cores: string;
-  display: string;
-  gpu: string;
+  dir: string;
+  hasKernel: boolean;
+  hasRamdisk: boolean;
+  hasSystem: boolean;
+  systemReady: boolean;
 }
 
-export function getEmulatorPath(): string | null {
-  return existsSync(EMULATOR_BIN) ? EMULATOR_BIN : null;
+export function getQemuPath(): string | null {
+  return existsSync(QEMU_BIN) ? QEMU_BIN : null;
 }
 
-export function discoverAVDs(): AVD[] {
-  const avds: AVD[] = [];
-  if (!existsSync(AVD_HOME)) return avds;
+export function discoverSystemImages(): SystemImage[] {
+  const images: SystemImage[] = [];
+  if (!existsSync(SYSTEM_IMAGES_ROOT)) return images;
 
-  for (const f of readdirSync(AVD_HOME)) {
-    if (!f.endsWith(".ini") || f.endsWith(".avd")) continue;
-    const name = f.replace(".ini", "");
-    const avdDir = join(AVD_HOME, `${name}.avd`);
-    const configPath = join(avdDir, "config.ini");
-    const config: Record<string, string> = {};
+  for (const apiDir of readdirSync(SYSTEM_IMAGES_ROOT)) {
+    const apiPath = join(SYSTEM_IMAGES_ROOT, apiDir);
+    try { if (!statSync(apiPath).isDirectory()) continue; } catch { continue; }
 
-    if (existsSync(configPath)) {
-      for (const line of readFileSync(configPath, "utf-8").split("\n")) {
-        const eq = line.indexOf("=");
-        if (eq > 0) config[line.slice(0, eq).trim()] = line.slice(eq + 1).trim();
-      }
+    for (const variant of readdirSync(apiPath)) {
+      const variantPath = join(apiPath, variant);
+      const arm64Path = join(variantPath, "arm64-v8a");
+      if (!existsSync(arm64Path)) continue;
+
+      const files = readdirSync(arm64Path);
+      const hasKernel = files.includes("kernel-ranchu");
+      const hasRamdisk = files.includes("ramdisk.img");
+      const hasSystemGz = files.includes("system.img.gz");
+      const hasSystemRaw = files.includes("system.img");
+
+      if (!hasKernel || !hasRamdisk) continue;
+
+      const apiLevel = apiDir.replace("android-", "");
+      images.push({
+        name: `Android ${apiLevel} (${variant})`,
+        apiLevel,
+        abi: "arm64-v8a",
+        dir: arm64Path,
+        hasKernel,
+        hasRamdisk,
+        hasSystem: hasSystemGz || hasSystemRaw,
+        systemReady: hasSystemRaw,
+      });
+    }
+  }
+
+  return images.sort((a, b) => parseInt(b.apiLevel) - parseInt(a.apiLevel));
+}
+
+async function decompressAndBoot(imageDir: string): Promise<void> {
+  const gzPath = join(imageDir, "system.img.gz");
+  const imgPath = join(imageDir, "system.img");
+
+  if (!existsSync(imgPath)) {
+    if (!existsSync(gzPath)) {
+      prepareProgress = "No system.img or system.img.gz found";
+      emulatorState = "stopped";
+      return;
     }
 
-    avds.push({
-      name,
-      target: config["tag.display"] || "Android",
-      abi: config["abi.type"] || "arm64-v8a",
-      ram: config["hw.ramSize"] || "2048",
-      cores: config["hw.cpu.ncore"] || "2",
-      display: `${config["hw.lcd.width"] || "1080"}x${config["hw.lcd.height"] || "1920"}`,
-      gpu: config["hw.gpu.mode"] || "auto",
-    });
+    emulatorState = "preparing";
+    const gzSize = statSync(gzPath).size;
+    prepareProgress = `Decompressing system.img.gz (${(gzSize / 1e9).toFixed(1)} GB compressed)...`;
+
+    try {
+      const src = createReadStream(gzPath);
+      const gunzip = createGunzip();
+      const dest = createWriteStream(imgPath);
+
+      let written = 0;
+      dest.on("drain", () => {});
+      const origWrite = dest.write.bind(dest);
+      dest.write = function(chunk: any, ...args: any[]) {
+        written += chunk.length;
+        if (written % (100 * 1024 * 1024) < chunk.length) {
+          prepareProgress = `Decompressing: ${(written / 1e9).toFixed(1)} GB written...`;
+        }
+        return origWrite(chunk, ...args);
+      } as typeof dest.write;
+
+      await pipeline(src, gunzip, dest);
+      prepareProgress = "Decompression complete";
+    } catch (e) {
+      prepareProgress = `Decompress failed: ${(e as Error).message}`;
+      emulatorState = "stopped";
+      return;
+    }
   }
-  return avds;
+
+  bootQemu(imageDir);
 }
 
-export function launchEmulator(avdName: string): { pid: number; cmd: string } | { error: string } {
-  if (!existsSync(EMULATOR_BIN)) {
-    return { error: "Emulator binary not found at " + EMULATOR_BIN };
+function bootQemu(imageDir: string) {
+  const kernel = join(imageDir, "kernel-ranchu");
+  const ramdisk = join(imageDir, "ramdisk.img");
+  const system = join(imageDir, "system.img");
+
+  if (!existsSync(kernel) || !existsSync(ramdisk) || !existsSync(system)) {
+    consoleBuffer.push("[Error: Missing boot files]");
+    emulatorState = "stopped";
+    return;
   }
 
-  if (runningProcess && !runningProcess.killed) {
-    return { error: "Emulator already running (PID " + runningProcess.pid + ")" };
-  }
+  const args = [
+    "-machine", "virt",
+    "-cpu", "cortex-a57",
+    "-accel", "whpx",
+    "-m", "2048",
+    "-nographic",
+    "-serial", "stdio",
+    "-net", "none",
+    "-kernel", kernel,
+    "-initrd", ramdisk,
+    "-drive", `if=none,id=system,file=${system},format=raw,readonly=on`,
+    "-device", "virtio-blk-device,drive=system",
+    "-append", "console=ttyAMA0 androidboot.hardware=ranchu",
+  ];
 
-  const args = ["-avd", avdName, "-gpu", "swiftshader_indirect"];
-  const proc = execFile(EMULATOR_BIN, args, {
-    cwd: EMULATOR_DIR,
+  emulatorState = "booting";
+  consoleBuffer.push(`[Launching] qemu-system-aarch64 ${args.slice(0, 6).join(" ")} ...`);
+
+  const proc = spawn(QEMU_BIN, args, {
     windowsHide: false,
+    stdio: ["pipe", "pipe", "pipe"],
   });
 
   runningProcess = proc;
-  proc.on("exit", () => { runningProcess = null; });
 
-  return { pid: proc.pid || 0, cmd: `emulator ${args.join(" ")}` };
+  let stdoutPartial = "";
+  proc.stdout?.on("data", (data: Buffer) => {
+    stdoutPartial += data.toString();
+    const lines = stdoutPartial.split("\n");
+    stdoutPartial = lines.pop() || "";
+    for (const line of lines) {
+      const trimmed = line.replace(/\r$/, "");
+      if (trimmed) consoleBuffer.push(trimmed);
+      if (trimmed.includes("Freeing unused kernel memory")) {
+        emulatorState = "running";
+      }
+    }
+  });
+
+  let stderrPartial = "";
+  proc.stderr?.on("data", (data: Buffer) => {
+    stderrPartial += data.toString();
+    const lines = stderrPartial.split("\n");
+    stderrPartial = lines.pop() || "";
+    for (const line of lines) {
+      const trimmed = line.replace(/\r$/, "");
+      if (trimmed) consoleBuffer.push(`[qemu] ${trimmed}`);
+    }
+  });
+
+  proc.on("exit", (code) => {
+    consoleBuffer.push(`\n[Emulator exited with code ${code}]`);
+    emulatorState = "stopped";
+    runningProcess = null;
+  });
+
+  proc.on("error", (err) => {
+    consoleBuffer.push(`[Error: ${err.message}]`);
+    emulatorState = "stopped";
+    runningProcess = null;
+  });
 }
 
-export async function sendAdbCommand(command: string): Promise<string> {
-  const adb = findAdb();
-  if (!adb) return "ADB not found";
-
-  try {
-    const { stdout, stderr } = await execAsync(`"${adb}" ${command}`, { timeout: 5000 });
-    return stdout || stderr || "ok";
-  } catch (e: unknown) {
-    return (e as Error).message || "command failed";
+export function startBoot(imageDir: string): { ok: boolean; error?: string } {
+  if (!existsSync(QEMU_BIN)) {
+    return { ok: false, error: `QEMU binary not found: ${QEMU_BIN}` };
   }
+  if (runningProcess && !runningProcess.killed) {
+    return { ok: false, error: `Emulator already running (PID ${runningProcess.pid})` };
+  }
+  if (emulatorState === "preparing") {
+    return { ok: false, error: "Already preparing system image" };
+  }
+
+  consoleBuffer = [];
+  pendingImageDir = imageDir;
+
+  decompressAndBoot(imageDir).catch((e) => {
+    consoleBuffer.push(`[Fatal: ${(e as Error).message}]`);
+    emulatorState = "stopped";
+  });
+
+  return { ok: true };
 }
 
-export function getRunningPid(): number | null {
-  if (runningProcess && !runningProcess.killed) return runningProcess.pid || null;
-  return null;
+export function stopEmulator(): boolean {
+  if (runningProcess && !runningProcess.killed) {
+    runningProcess.kill();
+    runningProcess = null;
+    emulatorState = "stopped";
+    return true;
+  }
+  return false;
+}
+
+export function getConsoleOutput(since = 0): { lines: string[]; total: number } {
+  return {
+    lines: consoleBuffer.slice(since),
+    total: consoleBuffer.length,
+  };
+}
+
+export function getState(): {
+  state: typeof emulatorState;
+  pid: number | null;
+  prepareProgress: string;
+  consoleLines: number;
+} {
+  return {
+    state: emulatorState,
+    pid: runningProcess?.pid || null,
+    prepareProgress,
+    consoleLines: consoleBuffer.length,
+  };
 }
